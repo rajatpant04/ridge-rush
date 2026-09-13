@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#142f2d">
+  <meta name="description" content="Take the scenic route. An endless hill-climbing driving game with bouncy suspension, mountain trails, coins, and fuel. Play with your keyboard or touch controls.">
+  <title>Ridge Rush — Take the scenic route</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23142f2d'/%3E%3Cpath d='M9 47 28 17 39 34 46 25 57 47Z' fill='%23e8f1dc'/%3E%3Cpath d='m20 29 8-12 8 12-8-4Z' fill='%23f29450'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Ridge Rush home"><span class="brand-mark" aria-hidden="true">↗</span><span>RIDGE<span class="brand-light">RUSH</span><span class="brand-period">.</span></span></a>
+      <div class="edition">THE LONG WAY IS THE GOOD WAY</div>
+      <div class="top-actions"><span class="edition-badge">A LITTLE OFF-ROAD ADVENTURE</span><button class="icon-button" id="helpButton" aria-label="How to play" title="How to play">?</button></div>
+    </header>
+
+    <section class="game-shell" id="gameShell" aria-label="Ridge Rush hill-climbing game">
+      <canvas id="gameCanvas" tabindex="0" aria-label="Driving game. Press Enter to start. Right arrow or D for gas, left arrow or A to brake. P pauses and R restarts.">Your browser needs Canvas support to play Ridge Rush.</canvas>
+
+      <div class="hud" id="hud">
+        <div class="stats">
+          <div class="stat"><span class="stat-label">DISTANCE</span><span class="stat-value"><span id="distance">0</span><small>m</small></span></div>
+          <div class="stat"><span class="stat-label"><span class="coin-dot" aria-hidden="true"></span> COINS</span><span class="stat-value" id="coins">0</span></div>
+          <div class="stat best-stat"><span class="stat-label">PERSONAL BEST</span><span class="stat-value"><span id="best">0</span><small>m</small></span></div>
+        </div>
+        <div class="right-hud">
+          <div class="fuel-block"><div class="fuel-caption"><span>FUEL</span><span id="fuelValue">100%</span></div><div class="fuel-track" role="progressbar" aria-label="Fuel remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="fuelBar"><div id="fuelFill"></div></div></div>
+          <button class="game-icon" id="pauseButton" title="Pause (P)" aria-label="Pause game" disabled><span class="pause-glyph" aria-hidden="true">Ⅱ</span></button>
+        </div>
+      </div>
+
+      <div class="trail-label"><span class="trail-number">01</span><span><b>ALPINE VALLEY</b><small>Endless trail · Go a little further</small></span></div>
+
+      <div class="overlay" id="overlay">
+        <div class="start-card" id="overlayCard" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" aria-describedby="overlayDescription">
+          <span class="eyebrow" id="overlayEyebrow">FRESH AIR. FULL TANK.</span>
+          <h1 id="overlayTitle">ONE MORE<br><span>HILL.</span></h1>
+          <p id="overlayDescription">Keep your fuel up.<br>Keep your wheels down.</p>
+          <div class="run-results" id="runResults" hidden><div><small>DISTANCE</small><strong id="resultDistance">0 m</strong></div><div><small>COINS</small><strong id="resultCoins">0</strong></div></div>
+          <button class="primary-button" id="playButton">LET’S RIDE <span aria-hidden="true">↗</span></button>
+          <button class="secondary-button" id="secondaryButton" hidden>Start a fresh run</button>
+          <span class="start-hint" id="startHint">or press <kbd>ENTER</kbd></span>
+        </div>
+      </div>
+
+      <div class="game-toast" id="toast" aria-live="polite"></div>
+
+      <div class="bottom-hud">
+        <button class="pedal brake" id="brakePedal" aria-label="Hold to brake or reverse; lean forward in the air"><span class="pedal-tread" aria-hidden="true"></span><span class="pedal-name">BRAKE <kbd>←</kbd></span></button>
+        <div class="run-indicator"><span id="runStatus">YOUR NEXT ADVENTURE STARTS HERE</span><span class="track-line"><span id="milestoneFill"></span></span><small id="milestoneText">NEXT MILESTONE · 500 m</small></div>
+        <button class="pedal gas" id="gasPedal" aria-label="Hold for gas; lean back in the air"><span class="pedal-tread" aria-hidden="true"></span><span class="pedal-name">GAS <kbd>→</kbd></span></button>
+      </div>
+      <div class="utility-actions"><button class="small-icon" id="soundButton" aria-label="Turn sound on" aria-pressed="false" title="Turn sound on">♪<span class="sound-slash" aria-hidden="true"></span></button><button class="small-icon" id="fullscreenButton" aria-label="Enter fullscreen" title="Fullscreen">⛶</button></div>
+    </section>
+
+    <footer class="footer"><div class="control-hints"><span><kbd>←</kbd><kbd>→</kbd> Drive & balance</span><span><kbd>P</kbd> Pause</span><span><kbd>R</kbd> Restart</span></div><span class="footer-note">Chase the horizon. Beat your best.</span></footer>
+  </main>
+  <dialog id="helpDialog" aria-labelledby="helpTitle"><div class="help-inner"><button class="help-close icon-button" id="closeHelp" aria-label="Close instructions">×</button><span class="eyebrow">A QUICK TRAIL GUIDE</span><h2 id="helpTitle">Find your balance.</h2><p>Drive as far as you can without running out of fuel or landing on your head.</p><dl><div><dt><kbd>→</kbd> / <kbd>D</kbd></dt><dd>Gas on the ground. Lean back in the air.</dd></div><div><dt><kbd>←</kbd> / <kbd>A</kbd></dt><dd>Brake, then reverse. Lean forward in the air.</dd></div><div><dt><kbd>P</kbd> / <kbd>ESC</kbd></dt><dd>Pause your run.</dd></div><div><dt><kbd>R</kbd></dt><dd>Restart with a full tank.</dd></div></dl><p class="help-tip">On a phone? Hold the two pedals. Ease off the gas at a crest, and try to land on both wheels. Collect gold coins and red fuel cans along the way.</p><p class="local-note">Your personal best is saved on this device.</p><button class="primary-button" id="helpDone">GOT IT <span aria-hidden="true">↗</span></button></div></dialog>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
