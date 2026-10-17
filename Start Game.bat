@@ -1,4 +1,11 @@
 @echo off
-start /b python -m http.server 8000
-timeout /t 2 >nul
-start "" http://localhost:8000
+cd /d "%~dp0"
+where node >nul 2>nul
+if %errorlevel% equ 0 goto usenode
+echo Ridge Rush needs Node.js to start its local web server.
+echo Install Node.js, then run this launcher again.
+pause
+exit /b 1
+
+:usenode
+node serve.mjs --open
